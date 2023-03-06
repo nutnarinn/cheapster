@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import './ProductCompare.css';
 import React, { useState } from 'react';
 
 function ProductCompare(props) {
@@ -26,6 +27,13 @@ function ProductCompare(props) {
     }
   }
 
+  const handleClear = () => {
+    setProduct1Price('');
+    setProduct1Size('');
+    setProduct2Price('');
+    setProduct2Size('');
+  };
+
   return (
     <div className="product-compare-container">
       <h2>Cheapster</h2>
@@ -50,6 +58,9 @@ function ProductCompare(props) {
           </tr>
         </tbody>
       </table>
+      <div className="button-container">
+        <button className="clear-button" onClick={handleClear}>Clear</button>
+      </div>
       {bothProductsComplete && <p>{resultMessage}</p>}
     </div>
   );

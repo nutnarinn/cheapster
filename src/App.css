@@ -36,10 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-/* ---------------------------- */
-.product-compare-container{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}

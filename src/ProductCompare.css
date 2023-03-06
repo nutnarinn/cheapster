@@ -1,0 +1,26 @@
+.product-compare-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-container {
+    margin-top: 20px;
+}
+  
+.clear-button {
+    background-color: grey;
+    color: white;
+    border: 2px solid grey;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.clear-button:hover {
+    background-color: transparent;
+    border-color: grey;
+    color: grey;
+}
