@@ -1,40 +1,88 @@
 import logo from './logo.svg';
 import './App.css';
 import './ProductCompare.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function ProductCompare(props) {
   const { product1, product2 } = props;
+  const [products, setProducts] = useState([
+    { name: 'A', price: '', size: '', pricePerUnit: null },
+    { name: 'B', price: '', size: '', pricePerUnit: null }
+  ]);
 
-  const [product1Price, setProduct1Price] = useState('');
-  const [product1Size, setProduct1Size] = useState('');
-  const [product2Price, setProduct2Price] = useState('');
-  const [product2Size, setProduct2Size] = useState('');
+  useEffect(() => {
+    // Calculate price per unit for each product whenever the size or price of a product changes
+    const updatedProducts = products.map((product) => {
+      const { price, size } = product;
+      const pricePerUnit = price && size ? price / size : null;
+      return { ...product, pricePerUnit };
+    });
+    setProducts(updatedProducts);
+  }, [products]);
 
-  const bothProductsComplete = product1Price && product1Size && product2Price && product2Size;
+  const allProductsComplete = products.every((product) => product.price && product.size && product.pricePerUnit);
 
-  const product1PricePerUnit = bothProductsComplete ? product1Price / product1Size : null;
-  const product2PricePerUnit = bothProductsComplete ? product2Price / product2Size : null;
+    let resultMessage = '';
+    const cheapestProducts = products.reduce((acc, cur) => {
+      if (!cur.pricePerUnit) {
+        return acc;
+      }
+      if (!acc.length || cur.pricePerUnit < acc[0].pricePerUnit) {
+        return [cur];
+      }
+      if (cur.pricePerUnit === acc[0].pricePerUnit) {
+        return [...acc, cur];
+      }
+      return acc;
+    }, []);
 
-  let resultMessage = '';
-  if (bothProductsComplete) {
-    if (product1PricePerUnit < product2PricePerUnit) {
-        const savings = Math.round((1 - product1PricePerUnit / product2PricePerUnit) * 100);
-        resultMessage = `${product1.name} is ${savings}% cheaper!`;
-    } else if (product1PricePerUnit > product2PricePerUnit) {
-        const savings = Math.round((1 - product2PricePerUnit / product1PricePerUnit) * 100);
-        resultMessage = `${product2.name} is ${savings}% cheaper!`;
+  if (allProductsComplete) {
+    if (cheapestProducts.length === 0) {
+        resultMessage = '';
+    } else if (cheapestProducts.length === 1) {
+        const cheapestProductNames = cheapestProducts.map((product) => product.name).join(' and ');
+        resultMessage = `${cheapestProductNames} is the cheapest!`;
     } else {
-      resultMessage = 'Same!';
+        const cheapestProductNames = cheapestProducts.map((product) => product.name).join(' and ');
+        resultMessage = `${cheapestProductNames} are tied for cheapest!`;
     }
   }
 
+
   const handleClear = () => {
-    setProduct1Price('');
-    setProduct1Size('');
-    setProduct2Price('');
-    setProduct2Size('');
+    const updatedProducts = products.map((product) => ({ ...product, price: '', size: '' }));
+    setProducts(updatedProducts.slice(0, 2));
   };
+
+  const handleAddProduct = () => {
+    if (products.length < 25) {
+      const newProduct = { name: String.fromCharCode(65 + products.length), price: '', size: '', pricePerUnit: null };
+      setProducts([...products, newProduct]);
+    }
+  };
+
+  const handleDeleteProduct = () => {
+    setProducts(products.slice(0, -1));
+  };
+
+  const handleProductChange = (index, field, value) => {
+    const newProducts = [...products];
+    newProducts[index][field] = value;
+    setProducts(newProducts);
+  };
+
+  const productRows = products.map((product, index) => {
+    const isCheapest = (cheapestProducts.some((p) => p.name === product.name)) && (cheapestProducts.length != 0);
+    const className = isCheapest ? 'cheapest' : '';
+    return (
+      <tr key={index} className={className}>
+        <td>{product.name}</td>
+        <td><input type="number" min="0" value={product.size} onChange={(e) => handleProductChange(index, 'size', e.target.value)} /></td>
+        <td><input type="number" min="0" value={product.price} onChange={(e) => handleProductChange(index, 'price', e.target.value)} /></td>
+        <td>{product.pricePerUnit && `${product.pricePerUnit.toFixed(2)} ฿ /unit`}</td>
+      </tr>
+    );
+  });
 
   return (
     <div className="product-compare-container">
@@ -48,22 +96,15 @@ function ProductCompare(props) {
           </tr>
         </thead>
         <tbody>
-          <tr className={product1PricePerUnit < product2PricePerUnit ? 'cheaper' : ''}>
-            <td>{product1.name}</td>
-            <td><input type="number" value={product1Size} onChange={(e) => setProduct1Size(e.target.value)} /></td>
-            <td><input type="number" value={product1Price} onChange={(e) => setProduct1Price(e.target.value)} /></td>
-          </tr>
-          <tr className={product2PricePerUnit < product1PricePerUnit ? 'cheaper' : ''}>
-            <td>{product2.name}</td>
-            <td><input type="number" value={product2Size} onChange={(e) => setProduct2Size(e.target.value)} /></td>
-            <td><input type="number" value={product2Price} onChange={(e) => setProduct2Price(e.target.value)} /></td>
-          </tr>
+          {productRows}
         </tbody>
       </table>
       <div className="button-container">
-        <button className="clear-button" onClick={handleClear}>Clear</button>
+        <button className="add-button" onClick={handleAddProduct}>Add</button>
+        {products.length > 2 && <button className="delete-button" onClick={handleDeleteProduct}>Delete</button>}
+        {products.length > 0 && <button className="clear-button" onClick={handleClear}>Clear</button>}
       </div>
-      {bothProductsComplete && <p>{resultMessage}</p>}
+      {allProductsComplete && <p className="result-message">{resultMessage}</p>}
     </div>
   );
 }
