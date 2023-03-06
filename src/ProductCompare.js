@@ -19,9 +19,11 @@ function ProductCompare(props) {
   let resultMessage = '';
   if (bothProductsComplete) {
     if (product1PricePerUnit < product2PricePerUnit) {
-      resultMessage = `${product1.name} is the better deal!`;
+        const savings = Math.round((1 - product1PricePerUnit / product2PricePerUnit) * 100);
+        resultMessage = `${product1.name} is ${savings}% cheaper!`;
     } else if (product1PricePerUnit > product2PricePerUnit) {
-      resultMessage = `${product2.name} is the better deal!`;
+        const savings = Math.round((1 - product2PricePerUnit / product1PricePerUnit) * 100);
+        resultMessage = `${product2.name} is ${savings}% cheaper!`;
     } else {
       resultMessage = 'Same!';
     }
