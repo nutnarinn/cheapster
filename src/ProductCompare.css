@@ -4,6 +4,26 @@
     align-items: center;
 }
 
+input {
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 16px;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .button-container {
     margin-top: 20px;
 }
@@ -23,4 +43,9 @@
     background-color: transparent;
     border-color: grey;
     color: grey;
+}
+
+.cheaper {
+  background-color: #c4f7a1;
+  transition: background-color 0.3s ease-in-out;
 }

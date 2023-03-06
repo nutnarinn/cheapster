@@ -48,12 +48,12 @@ function ProductCompare(props) {
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr className={product1PricePerUnit < product2PricePerUnit ? 'cheaper' : ''}>
             <td>{product1.name}</td>
             <td><input type="number" value={product1Size} onChange={(e) => setProduct1Size(e.target.value)} /></td>
             <td><input type="number" value={product1Price} onChange={(e) => setProduct1Price(e.target.value)} /></td>
           </tr>
-          <tr>
+          <tr className={product2PricePerUnit < product1PricePerUnit ? 'cheaper' : ''}>
             <td>{product2.name}</td>
             <td><input type="number" value={product2Size} onChange={(e) => setProduct2Size(e.target.value)} /></td>
             <td><input type="number" value={product2Price} onChange={(e) => setProduct2Price(e.target.value)} /></td>
