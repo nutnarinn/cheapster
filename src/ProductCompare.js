@@ -72,7 +72,7 @@ function ProductCompare(props) {
   };
 
   const productRows = products.map((product, index) => {
-    const isCheapest = (cheapestProducts.some((p) => p.name === product.name)) && (cheapestProducts.length != 0);
+    const isCheapest = (cheapestProducts.some((p) => p.name === product.name)) && (allProductsComplete);
     const className = isCheapest ? 'cheapest' : '';
     return (
       <tr key={index} className={className}>
